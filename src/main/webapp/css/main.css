@@ -2,17 +2,34 @@ table{
 	width: 50%;
 	border-collapse: collapse;
 }
-td, th{
+table td, table th{
   border: 1px solid;
   color: green;
   text-align: left;
   padding: 8px;
 }
-tr:nth-child(even){
+table tbody tr:nth-child(even){
 	background-color: #f2f2f2
 	}
 
-th {
+table th {
   background-color: green;
   color: white;
+}
+.poista{
+	color: red;
+	text-decoration: underline;
+	cursor: pointer;	
+}
+.oikealle{
+	text-align: right;	
+}
+#uusiAsiakas, #takaisin{
+	color: white;	
+	cursor: pointer;	
+}
+
+#linkki{
+	color: #ffffff;	
+	text-decoration: none;
 }

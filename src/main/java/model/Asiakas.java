@@ -1,5 +1,5 @@
 package model; //bean-luokka
-
+//luodaan samoja muuttujia kuin on tietokannassa ja generoidaan konstruktorit, getterit setterit jne.
 public class Asiakas {
 	private int asiakas_id;
 	private String etunimi, sukunimi, puhelin, sposti;

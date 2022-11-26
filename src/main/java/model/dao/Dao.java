@@ -9,6 +9,7 @@ import java.util.ArrayList;
 
 import model.Asiakas;
 
+
 public class Dao {
 	private Connection con = null; // yhteysobjekti
 	private ResultSet rs = null; // result set
@@ -61,7 +62,7 @@ public class Dao {
 		}
 	}
 	
-	public ArrayList<Asiakas>getAllItems() { // metodi joka hakee kaikki tiedot
+	public ArrayList<Asiakas>getAllItems() { // metodi joka hakee kaikki tiedot ja palautaa Asiakas-oliota
 		ArrayList<Asiakas> asiakkaat = new ArrayList<Asiakas>(); //luo uuden arraylistin, ja jos arvoja ei ole, se palautaa tyhjän arraylistin
 		sql = "SELECT * FROM asiakkaat ORDER BY asiakas_id DESC"; // Suurin id tulee ensimmäisenä
 		try {
@@ -123,5 +124,42 @@ public class Dao {
 			sulje(); //katkaistaan yhteys
 		}
 		return asiakkaat;
+	}
+	
+	public boolean addItem(Asiakas asiakas) {
+		boolean paluuArvo = true;
+		sql = "INSERT INTO asiakkaat(etunimi, sukunimi, puhelin, sposti)VALUES(?,?,?,?)";
+		try {
+			con = yhdista();
+			stmtPrep = con.prepareStatement(sql);
+			stmtPrep.setString(1, asiakas.getEtunimi());
+			stmtPrep.setString(2, asiakas.getSukunimi());
+			stmtPrep.setString(3, asiakas.getPuhelin());
+			stmtPrep.setString(4, asiakas.getSposti());
+			stmtPrep.executeUpdate();		
+		} catch (Exception e) {
+			paluuArvo=false;
+			e.printStackTrace();
+		} finally {
+			sulje();
+		}
+		return paluuArvo;
+	}
+	
+	public boolean removeItem(int asiakas_id) { // Oikeassa elämässä tiedot ensisijaisesti merkitään poistetuksi.
+		boolean paluuArvo = true; //alussa poiston arvo on true, eli onnistui
+		sql = "DELETE FROM asiakkaat WHERE asiakas_id=?";
+		try {
+			con = yhdista();
+			stmtPrep = con.prepareStatement(sql);
+			stmtPrep.setInt(1, asiakas_id);
+			stmtPrep.executeUpdate();
+		} catch (Exception e) {
+			e.printStackTrace();
+			paluuArvo = false; //jos kuitenkin poisto ei onnistuisi palautetaan false
+		} finally {
+			sulje();
+		}
+		return paluuArvo;
 	}
 }
