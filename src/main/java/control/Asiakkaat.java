@@ -30,14 +30,15 @@ public class Asiakkaat extends HttpServlet {
 	public Asiakkaat() {
 		System.out.println("Asiakkaat.Asiakkaat()");
 	}
-
+//haku
 	protected void doGet(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
 		System.out.println("Asiakkaat.doGet()");
 		String hakusana = request.getParameter("hakusana"); // hakusanan haku main.js:sta
+		String asiakas_id = request.getParameter("asiakas_id");
 		System.out.println(hakusana);// hakusanan tulostus konsoliin
 		Dao dao = new Dao(); // kutsutaan kaikki asiakkaat tieotkannasta
-		ArrayList<Asiakas> asiakkaat = dao.getAllItems(); // dao palauttaa kaikki asiakkaat arraylistissa
+		ArrayList<Asiakas> asiakkaat;// = dao.getAllItems(); // dao palauttaa kaikki asiakkaat arraylistissa
 		// System.out.println(asiakas);
 		// String strJSON = new Gson().toJson(asiakas); //asiakkaat -arraylistin
 		// muuttaaminen json-tyypiseksi/stringiksi
@@ -52,6 +53,9 @@ public class Asiakkaat extends HttpServlet {
 				asiakkaat = dao.getAllItems(); // Haetaan kaikki asiakkaat Dao.jafa:sta parametritonta, rivit 64-82
 			}
 			strJSON = new Gson().toJson(asiakkaat);
+		}else if (asiakas_id != null) {
+			Asiakas asiakas = dao.getItem(Integer.parseInt(asiakas_id));
+			strJSON = new Gson().toJson(asiakas);
 		}
 		response.setContentType("application/json; charset=UTF-8"); // määrittely se mitä tullaan kirjoittamaan on
 																	// json-tyypinen
@@ -59,7 +63,7 @@ public class Asiakkaat extends HttpServlet {
 												// seuraavan rivin
 		out.println(strJSON); // tulostus apin rajapintaan (selaimelle raw data-muodossa)
 	}
-
+//lisäys
 	protected void doPost(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
 		System.out.println("Asiakkaat.doPost()");
@@ -79,12 +83,28 @@ public class Asiakkaat extends HttpServlet {
 			out.println("{\"response\":0}"); // Asiakkaan lisääminen epäonnistui {"response":0}
 		}
 	}
-
+//muutos
 	protected void doPut(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
 		System.out.println("Asiakkaat.doPut()");
-	}
+		// Luetaan JSON-tiedot POST-pyynnön bodysta ja luodaan niiden perusteella uusi
+		// asiakas
+		String strJSONInput = request.getReader().lines().collect(Collectors.joining());
+		// System.out.println(strJSONInput);
+		Asiakas asiakas = new Gson().fromJson(strJSONInput, Asiakas.class);
+		// System.out.println(asiakas);
 
+		response.setContentType("application/json; charset=UTF-8");
+		PrintWriter out = response.getWriter();
+		Dao dao = new Dao();
+		if (dao.changeItem(asiakas)) { // asiakas == true
+			out.println("{\"response\":1}"); // Asiakkaan muuttaminen onnistui {"response":1}
+		} else { // asiakas == false
+			out.println("{\"response\":0}"); // Asiakkaan muuttaminen epäonnistui {"response":0}
+		}
+
+	}
+//poisto
 	protected void doDelete(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
 		System.out.println("Asiakkaat.doDelete()");
