@@ -6,7 +6,7 @@
 	let requestOptions = {
 			method: "GET", //get-metodin kutsu
 			//headers: { "Content-Type": "application/json; charset=UTF-8" },
-			headers: { "Content_Type": "application/x-www-form-urlencoded" }
+			headers: { "Content_Type": "application/x-www-form-urlencoded; charset=UTF-8" }
 	};
 	fetch(url, requestOptions) //then-tarkoittaa että odotetaan niin kauan kunnes saadaan vastaus
 	.then(response => response.json()) //saatu JSON-stringi muutetaan vastausteksi JSON-objektiksi, =>-tämä on nuolinotaatio
@@ -91,7 +91,7 @@ function haeAsiakas() {
 	console.log(url);
     let requestOptions = {
         method: "GET",
-        headers: { "Content-Type": "application/x-www-form-urlencoded" }       
+        headers: { "Content-Type": "application/x-www-form-urlencoded; charset=UTF-8" }       
     };    
     fetch(url, requestOptions)
     .then(response => response.json())//Muutetaan vastausteksti JSON-objektiksi
@@ -121,9 +121,9 @@ function paivitaTiedot(){
    	.then(responseObj => {	
    		//console.log(responseObj);
    		if(responseObj.response==0){
-   			document.getElementById("ilmo").innerHTML = "Asiakkaan muutos epäonnistui.";	
+   			document.getElementById("ilmo").innerHTML = "Asiakkaan tietojen muutos epäonnistui.";	
         }else if(responseObj.response==1){ 
-        	document.getElementById("ilmo").innerHTML = "Asiakkaan muutos onnistui.";
+        	document.getElementById("ilmo").innerHTML = "Asiakkaan tietojen muutos onnistui.";
 			document.lomake.reset(); //Tyhjennetään asiakkaan muutoksen lomake		        	
 		}
 		setTimeout(function(){ document.getElementById("ilmo").innerHTML=""; }, 3000);

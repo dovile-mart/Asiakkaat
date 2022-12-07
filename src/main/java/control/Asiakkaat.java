@@ -14,7 +14,6 @@ import javax.servlet.http.HttpServletResponse;
 import com.google.gson.Gson;
 
 import model.Asiakas;
-
 import model.dao.Dao;
 
 /**
@@ -30,13 +29,15 @@ public class Asiakkaat extends HttpServlet {
 	public Asiakkaat() {
 		System.out.println("Asiakkaat.Asiakkaat()");
 	}
+
 //haku
 	protected void doGet(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
 		System.out.println("Asiakkaat.doGet()");
 		String hakusana = request.getParameter("hakusana"); // hakusanan haku main.js:sta
-		String asiakas_id = request.getParameter("asiakas_id");
 		System.out.println(hakusana);// hakusanan tulostus konsoliin
+		String asiakas_id = request.getParameter("asiakas_id");
+
 		Dao dao = new Dao(); // kutsutaan kaikki asiakkaat tieotkannasta
 		ArrayList<Asiakas> asiakkaat;// = dao.getAllItems(); // dao palauttaa kaikki asiakkaat arraylistissa
 		// System.out.println(asiakas);
@@ -50,19 +51,24 @@ public class Asiakkaat extends HttpServlet {
 				asiakkaat = dao.getAllItems(hakusana); // Haetaan kaikki hakusanan mukaiset asiakkaat. Eli kutsutaan
 														// Dao.java:sta parametrillista rivit 94-104
 			} else {
-				asiakkaat = dao.getAllItems(); // Haetaan kaikki asiakkaat Dao.jafa:sta parametritonta, rivit 64-82
+				asiakkaat = dao.getAllItems(); // Haetaan kaikki asiakkaat Dao.java:sta parametritonta, rivit 64-82
 			}
 			strJSON = new Gson().toJson(asiakkaat);
-		}else if (asiakas_id != null) {
+		} else if (asiakas_id != null) {
 			Asiakas asiakas = dao.getItem(Integer.parseInt(asiakas_id));
 			strJSON = new Gson().toJson(asiakas);
+		} else {
+			asiakkaat = dao.getAllItems(); //Haetaan kaikki asiakkaat - testauksessa
+			strJSON = new Gson().toJson(asiakkaat); //työnnetään ne Json
 		}
+
 		response.setContentType("application/json; charset=UTF-8"); // määrittely se mitä tullaan kirjoittamaan on
 																	// json-tyypinen
 		PrintWriter out = response.getWriter(); // tehdään PrintWriter jonka nimi on out ja käsketään kirjoittamaan
 												// seuraavan rivin
 		out.println(strJSON); // tulostus apin rajapintaan (selaimelle raw data-muodossa)
 	}
+
 //lisäys
 	protected void doPost(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
@@ -83,6 +89,7 @@ public class Asiakkaat extends HttpServlet {
 			out.println("{\"response\":0}"); // Asiakkaan lisääminen epäonnistui {"response":0}
 		}
 	}
+
 //muutos
 	protected void doPut(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
@@ -104,16 +111,20 @@ public class Asiakkaat extends HttpServlet {
 		}
 
 	}
+
 //poisto
 	protected void doDelete(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
 		System.out.println("Asiakkaat.doDelete()");
-		int asiakas_id=Integer.parseInt(request.getParameter("asiakas_id"));
-		//int asiakas_id=Integer.parseInt(request.getParameter("asiakas_id")); //frontista tulleen doDelete kutsun yhteydessä välitetty asiakas_id - request.getParameter("asiakas_id")
-											//sen muutetaan numeraaliseksi int id:ksi, koska kaikki mikä requestin kautta tulee ovat merkkijonoja
+		int asiakas_id = Integer.parseInt(request.getParameter("asiakas_id"));
+		// int asiakas_id=Integer.parseInt(request.getParameter("asiakas_id"));
+		// //frontista tulleen doDelete kutsun yhteydessä välitetty asiakas_id -
+		// request.getParameter("asiakas_id")
+		// sen muutetaan numeraaliseksi int id:ksi, koska kaikki mikä requestin kautta
+		// tulee ovat merkkijonoja
 		Dao dao = new Dao();
-		response.setContentType("application/json; charset=UTF-8");
-		
+		response.setContentType("application/json");// ; charset=UTF-8");
+
 		PrintWriter out = response.getWriter();
 		if (dao.removeItem(asiakas_id)) { // asiakas == true
 			out.println("{\"response\":1}"); // Asiakkaan poistaminen onnistui {"response":1}

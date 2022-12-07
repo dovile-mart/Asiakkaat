@@ -10,6 +10,7 @@ import java.util.ArrayList;
 import model.Asiakas;
 
 
+
 public class Dao {
 	private Connection con = null; // yhteysobjekti
 	private ResultSet rs = null; // result set
@@ -162,7 +163,7 @@ public class Dao {
 		}
 		return paluuArvo;
 	}
-
+	
 	public Asiakas getItem(int asiakas_id) {
 		Asiakas asiakas = null;
 		sql = "SELECT * FROM asiakkaat WHERE asiakas_id=?";
@@ -209,5 +210,28 @@ public class Dao {
 			sulje();
 		}				
 		return paluuArvo;
+	}
+	
+	public String findUser(String uid, String pwd) {
+		String nimi = null;
+		sql="SELECT * FROM asiakkaat WHERE sposti=? AND salasana=?";						  
+		try {
+			con = yhdista();
+			if(con!=null){ 
+				stmtPrep = con.prepareStatement(sql); 
+				stmtPrep.setString(1, uid);
+				stmtPrep.setString(2, pwd);
+        		rs = stmtPrep.executeQuery();  
+        		if(rs.isBeforeFirst()){ //jos kysely tuotti dataa, eli asiakas löytyi
+        			rs.next();
+        			nimi = rs.getString("etunimi")+ " " +rs.getString("sukunimi");     			      			
+				}        		
+			}			        
+		} catch (Exception e) {				
+			e.printStackTrace();			
+		} finally {
+			sulje();
+		}				
+		return nimi;
 	}
 }

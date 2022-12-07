@@ -1,3 +1,4 @@
+<%@include file="header.jsp" %>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 <!DOCTYPE html>
@@ -7,7 +8,7 @@
 <link rel="stylesheet" type="text/css" href="css/main.css">
 <script src="scripts/main.js"></script>
 <script src="scripts/io.js"></script>
-<title>Asiakkaan lisäys</title>
+<title>Asiakkaan muutos</title>
 </head>
 <body onload="asetaFocus('etunimi')" onkeydown="tutkiKey(event, 'paivita')">
 <form name="lomake">
